@@ -1,0 +1,78 @@
+version: "3.7"
+
+services:
+  web-back:
+    container_name: python-backend
+    env_file: ./backend/web-back/.env
+    build: ./backend/web-back/.
+    volumes:
+      - ./backend/web-back:/code/
+      - static_volume:/code/staticfiles # <-- bind the static volume
+    stdin_open: true
+    tty: true
+    command: gunicorn --bind :8000 config.wsgi:application
+    networks:
+      - backend_network
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - DJANGO_SETTINGS_MODULE=config.local_settings
+    depends_on:
+      - db
+  backend-server:
+    container_name: nginx_back
+    build:
+      context: ./backend/nginx/.
+      dockerfile: Dockerfile.dev
+    volumes:
+      - static_volume:/code/staticfiles # <-- bind the static volume
+    ports:
+      - "8080:80"
+    depends_on:
+      - web-back
+    networks:
+      - backend_network
+  db:
+    build: ./mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: todoList
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - ./mysql_volume:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - backend_network
+
+  web-front:
+    image: node:14.13.1
+    volumes:
+      - ./frontend/web-front:/home/app/frontend
+    ports:
+      - 3000:3000
+    working_dir: /home/app/frontend
+    command: [bash, -c, yarn upgrade --no-progress --network-timeout 1000000 && yarn run dev]
+    networks:
+      - frontend_network
+  frontend-server:
+    container_name: nginx_frontend
+    build:
+      context: ./frontend/nginx/.
+      dockerfile: Dockerfile.dev
+    ports:
+      - "80:80"
+    depends_on:
+      - web-front
+    networks:
+      - frontend_network
+networks:
+  backend_network:
+    driver: bridge
+  frontend_network:
+    driver: bridge
+volumes:
+  static_volume:

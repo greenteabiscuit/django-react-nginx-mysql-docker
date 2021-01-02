@@ -14,6 +14,12 @@ $ docker-compose run --rm web-back sh -c "python manage.py makemigrations"
 $ docker-compose run --rm web-back sh -c "python manage.py migrate"
 ```
 
+## create superuser
+
+```
+docker-compose run --rm web-back sh -c "python manage.py createsuperuser"
+```
+
 ## add packages
 
 ```

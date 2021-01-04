@@ -20,11 +20,6 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))  # 追加
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1_vj5u9p3nm4fwufe_96e9^6li1htp9avbg8+7*i#h%klp#&0='
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 

@@ -10,7 +10,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'todoList',
-        'USER': 'user',
+        'USER': os.environ.get('USER'),
         'PASSWORD': 'password',
         'HOST': os.environ.get('HOST'),
         'PORT': '3306',

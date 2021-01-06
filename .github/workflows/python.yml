@@ -34,4 +34,4 @@ jobs:
       run: |
         python manage.py test
       env:
-        DJANGO_SETTING_MODULE: config.local_settings
+        DJANGO_SETTINGS_MODULE: config.local_settings

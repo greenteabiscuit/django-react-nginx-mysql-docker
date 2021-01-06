@@ -33,3 +33,5 @@ jobs:
       working-directory: ./backend/web-back
       run: |
         python manage.py test
+      env:
+        DJANGO_SETTING_MODULE: config.local_settings

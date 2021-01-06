@@ -10,6 +10,16 @@ jobs:
       matrix:
         python-version: [3.7, 3.8]
 
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: todoList
+        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
+
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -36,3 +46,4 @@ jobs:
       env:
         DJANGO_SETTINGS_MODULE: config.local_settings
         SECRET_KEY: 1^ps0)rs)10az7$s5uvw^6ij_w&8$x3j)_gr%b18*@j4u)bok&
+        HOST: "127.0.0.1"

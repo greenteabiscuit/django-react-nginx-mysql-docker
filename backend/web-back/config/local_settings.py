@@ -12,7 +12,7 @@ DATABASES = {
         'NAME': 'todoList',
         'USER': 'user',
         'PASSWORD': 'password',
-        'HOST': 'db',
+        'HOST': os.environ.get('HOST'),
         'PORT': '3306',
     }
 }

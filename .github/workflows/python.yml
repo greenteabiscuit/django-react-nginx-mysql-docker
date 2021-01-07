@@ -45,6 +45,6 @@ jobs:
         python manage.py test
       env:
         DJANGO_SETTINGS_MODULE: config.local_settings
-        SECRET_KEY: 1^ps0)rs)10az7$s5uvw^6ij_w&8$x3j)_gr%b18*@j4u)bok&
+        SECRET_KEY: ${{ secrets.SECRET_KEY }} 
         HOST: "127.0.0.1"
         USER: "root"

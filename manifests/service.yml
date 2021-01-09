@@ -1,0 +1,25 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend-node-service
+spec:
+  type: NodePort
+  selector:
+    app: frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: backend-node-service
+spec:
+  type: NodePort
+  selector:
+    app: backend
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP

@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend #ここを追加しないとエラー
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: web-back
+          image: gcr.io/gke-react-django-nginx-mysql/web-back:latest # container name
+          imagePullPolicy: Always
+          command: ["gunicorn", "-b", ":8000", "config.wsgi"]
+          env:
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql
+                  key: password
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-key
+                  key: SECRET_KEY
+            - name: ENV
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: ENV
+            - name: STORAGE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: storage-name
+                  key: STORAGE_NAME
+          ports:
+            - containerPort: 8000
+        - image: gcr.io/cloudsql-docker/gce-proxy:1.16
+          name: cloudsql-proxy
+          command:
+            [
+              "/cloud_sql_proxy",
+              "--dir=/cloudsql",
+              "-instances=gke-react-django-nginx-mysql:asia-northeast2:gke-react-django-nginx-mysql-instance=tcp:0.0.0.0:13306", # your instance access name
+              "-credential_file=/secrets/cloudsql/credentials.json",
+            ]
+          volumeMounts:
+            - name: cloudsql-oauth-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
+            - name: cloudsql
+              mountPath: /cloudsql
+        - image: gcr.io/gke-react-django-nginx-mysql/nginx-back:latest # container name
+          name: nginx-back
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+      volumes:
+        - name: cloudsql-oauth-credentials
+          secret:
+            secretName: cloudsql-oauth-credentials
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs
+        - name: cloudsql
+          emptyDir:

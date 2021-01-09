@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.global-static-ip-name: "test-ip"
+spec:
+  rules:
+    - http:
+        paths:
+        - path: /*
+          backend:
+            serviceName: frontend-node-service
+            servicePort: 80
+        - path: /api/*
+          backend:
+            serviceName: backend-node-service
+            servicePort: 80
+        - path: /admin/*
+          backend:
+            serviceName: backend-node-service
+            servicePort: 80

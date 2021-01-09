@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend #ここを追加しないとエラー
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: web-front
+          image: gcr.io/gke-react-django-nginx-mysql/web-front:latest # container name
+          imagePullPolicy: Always
+          command: [bash, -c, yarn upgrade --no-progress --network-timeout 1000000 && yarn run dev]
+          ports:
+            - containerPort: 3000
+        - name: nginx-front
+          image: gcr.io/gke-react-django-nginx-mysql/nginx-front:latest # container name
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80

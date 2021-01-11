@@ -5,8 +5,8 @@
 ```
 SECRET_KEY='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 DEBUG=False
-HOST='db'
-USER='user'
+HOST=db
+USER=user
 ```
 
 ## migration for database

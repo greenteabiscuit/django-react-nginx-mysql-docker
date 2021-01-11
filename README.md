@@ -27,3 +27,9 @@ docker-compose run --rm web-back sh -c "python manage.py createsuperuser"
 ```
 docker-compose run --rm web-front sh -c "yarn add next react"
 ```
+
+## run server
+
+```
+docker-compose up --build
+```

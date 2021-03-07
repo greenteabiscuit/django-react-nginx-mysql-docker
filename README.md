@@ -1,5 +1,13 @@
 # django-react-nginx-mysql-docker
 
+## Modify the time for wait.sh
+
+Modify the timeout seconds in `frontend/nginx/wait.sh` if the frontend nginx server starts earlier than react. (e.g. 15 -> 120)
+
+```
+WAITFORIT_TIMEOUT=${WAITFORIT_TIMEOUT:-15}
+```
+
 ## `backend/web-back/.env` just for development
 
 ```
